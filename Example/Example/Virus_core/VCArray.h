@@ -31,9 +31,13 @@ VC_OPEN VCTypeID VCArrayGetTypeID(void);
 
 VC_OPEN VCArrayRef VCArrayCreate(const void **values,VCIndex numValues,const VCArrayCallback *callback);
 
+VC_OPEN VCArrayRef VCArrayCreateMutable(VCIndex capacity,const VCArrayCallback *callback);
+
 VC_OPEN VCIndex VCArrayGetCount(VCArrayRef array);
 
 VC_OPEN const void *VCArrayGetValueAtIndex(VCArrayRef array,VCIndex index);
+
+VC_OPEN VCIndex VCArrayGetFirstIndexOfValue(VCArrayRef array,const void *value);
 
 VC_OPEN VCArrayRef VCArrayCopyWithArray(VCArrayRef array);
 

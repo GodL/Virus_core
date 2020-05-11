@@ -42,10 +42,13 @@ VC_INLINE VCIndex __VCArrayDequeRoundUpCapacity(VCIndex capacity) {
 VCArrayRef __VCArrayCopyWithArray(VCArrayRef arr) {
     if (arr == NULL) return NULL;
     VCRuntimeBase *base = (VCRuntimeBase *)arr;
-    if (base->info[0] == 0) {
-        return arr;
+    if (base->info[0] == 0) return arr;
+    const void *values[arr->count];
+    struct __VCArrayDeque *deque = arr->store;
+    for (VCIndex i=0; i<arr->count; i++) {
+        values[i] = deque->values[deque->left + i % arr->count];
     }
-    return NULL;
+    return VCArrayCreate(values, arr->count, (const VCArrayCallback *)arr->_base.callback);
 }
 
 static VCTypeID *__kVCArrayType = NULL;
@@ -63,4 +66,11 @@ VCTypeID VCArrayGetTypeID(void) {
     return VCRuntimeRegisterClass(__kVCArrayType, __VCArrayClass);
 }
 
+VCIndex VCArrayGetCount(VCArrayRef array) {
+    if (array == NULL) return 0;
+    return array->count;
+}
 
+VCArrayRef VCArrayCopyWithArray(VCArrayRef array) {
+    return __VCArrayCopyWithArray(array);
+}
