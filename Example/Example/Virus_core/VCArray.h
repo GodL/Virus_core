@@ -15,6 +15,8 @@ typedef struct __VCArray * VCArrayRef;
 
 typedef struct __VCArray * VCMutableArrayRef;
 
+typedef void (*VCArrayApplierFunction)(const void *value, void *context);
+
 typedef const void *(*VCArrayRetainCallback)(const void *value);
 typedef void (*VCArrayReleaseCallback)(const void *value);
 typedef VCBool (*VCArrayEqualCallback)(const void *value1,const void *value2);
@@ -31,16 +33,36 @@ VC_OPEN VCTypeID VCArrayGetTypeID(void);
 
 VC_OPEN VCArrayRef VCArrayCreate(const void **values,VCIndex numValues,const VCArrayCallback *callback);
 
-VC_OPEN VCArrayRef VCArrayCreateMutable(VCIndex capacity,const VCArrayCallback *callback);
+VC_OPEN VCMutableArrayRef VCArrayCreateMutable(VCIndex capacity,const VCArrayCallback *callback);
 
 VC_OPEN VCIndex VCArrayGetCount(VCArrayRef array);
+
+VC_OPEN VCBool VCArrayContainsValue(VCArrayRef array,const void *value);
 
 VC_OPEN const void *VCArrayGetValueAtIndex(VCArrayRef array,VCIndex index);
 
 VC_OPEN VCIndex VCArrayGetFirstIndexOfValue(VCArrayRef array,const void *value);
 
+VC_OPEN VCIndex VCArrayGetLastIndexOfValue(VCArrayRef array,const void *value);
+
 VC_OPEN VCArrayRef VCArrayCopyWithArray(VCArrayRef array);
 
-VC_OPEN VCArrayRef VCArrayCopyMutableWithArray(VCArrayRef array);
+VC_OPEN VCMutableArrayRef VCArrayCopyMutableWithArray(VCArrayRef array);
+
+VC_OPEN void VCArrayApplyFunction(VCArrayRef array,VCArrayApplierFunction applier,void *context);
+
+VC_OPEN void VCArrayAppendValue(VCMutableArrayRef array,const void *value);
+
+VC_OPEN void VCArrayInsertValueAtIndex(VCMutableArrayRef array,const void *value,VCIndex index);
+
+VC_OPEN void VCArrayReplaceValueAtIndex(VCMutableArrayRef array,const void *value,VCIndex index);
+
+VC_OPEN void VCArrayRemoveValueAtIndex(VCMutableArrayRef array,VCIndex index);
+
+VC_OPEN void VCArrayRemoveAllValues(VCMutableArrayRef array);
+
+VC_OPEN void VCArrayExchangeValues(VCMutableArrayRef array,VCIndex index1,VCIndex index2);
+
+VC_OPEN VCArrayAppendArray(VCMutableArrayRef array,VCArrayRef other);
 
 #endif /* VCArray_h */
