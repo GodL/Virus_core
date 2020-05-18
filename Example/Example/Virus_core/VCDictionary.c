@@ -7,3 +7,7 @@
 //
 
 #include "VCDictionary.h"
+
+typedef struct __VCDictionary {
+    
+} VCDictionary;

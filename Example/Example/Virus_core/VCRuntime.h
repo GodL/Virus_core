@@ -17,7 +17,7 @@ typedef struct __VCRuntimeClass {
     const char *className;
     void (*init)(VCTypeRef vc);
     VCTypeRef (*copy)(VCTypeRef vc);
-    VCBool (*equal)(VCTypeRef vc1,VCTypeRef vc2);
+    bool (*equal)(VCTypeRef vc1,VCTypeRef vc2);
     VCHashCode (*hash)(VCTypeRef vc);
     void (*dealloc)(VCTypeRef vc);
 } VCRuntimeClass;

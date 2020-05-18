@@ -23,6 +23,8 @@
 		464FC1A224693F640005D833 /* VCLinkedList.c in Sources */ = {isa = PBXBuildFile; fileRef = 464FC1A124693F640005D833 /* VCLinkedList.c */; };
 		464FC1A524693F9A0005D833 /* VCAtomicQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 464FC1A424693F9A0005D833 /* VCAtomicQueue.c */; };
 		464FC1A824693FC50005D833 /* VCBlockingQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 464FC1A724693FC50005D833 /* VCBlockingQueue.c */; };
+		4650D3A024728B5900D47878 /* VCSqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 4650D39F24728B5900D47878 /* VCSqlite3.c */; };
+		4650D3A324728EC100D47878 /* VCSqliteStmt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4650D3A224728EC100D47878 /* VCSqliteStmt.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +77,10 @@
 		464FC1A424693F9A0005D833 /* VCAtomicQueue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCAtomicQueue.c; sourceTree = "<group>"; };
 		464FC1A624693FC50005D833 /* VCBlockingQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCBlockingQueue.h; sourceTree = "<group>"; };
 		464FC1A724693FC50005D833 /* VCBlockingQueue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCBlockingQueue.c; sourceTree = "<group>"; };
+		4650D39E24728B5900D47878 /* VCSqlite3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCSqlite3.h; sourceTree = "<group>"; };
+		4650D39F24728B5900D47878 /* VCSqlite3.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCSqlite3.c; sourceTree = "<group>"; };
+		4650D3A124728EC100D47878 /* VCSqliteStmt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCSqliteStmt.h; sourceTree = "<group>"; };
+		4650D3A224728EC100D47878 /* VCSqliteStmt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCSqliteStmt.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +182,10 @@
 				464FC1A424693F9A0005D833 /* VCAtomicQueue.c */,
 				464FC1A624693FC50005D833 /* VCBlockingQueue.h */,
 				464FC1A724693FC50005D833 /* VCBlockingQueue.c */,
+				4650D39E24728B5900D47878 /* VCSqlite3.h */,
+				4650D39F24728B5900D47878 /* VCSqlite3.c */,
+				4650D3A124728EC100D47878 /* VCSqliteStmt.h */,
+				4650D3A224728EC100D47878 /* VCSqliteStmt.c */,
 			);
 			path = Virus_core;
 			sourceTree = "<group>";
@@ -312,6 +322,7 @@
 			files = (
 				464F79D724652FBB00007DDE /* ViewController.m in Sources */,
 				464FC1A524693F9A0005D833 /* VCAtomicQueue.c in Sources */,
+				4650D3A024728B5900D47878 /* VCSqlite3.c in Sources */,
 				464691DF2466992D00FE10F6 /* VCRuntime.c in Sources */,
 				464F79D124652FBB00007DDE /* AppDelegate.m in Sources */,
 				464FC19C24693EFF0005D833 /* VCArray.c in Sources */,
@@ -320,6 +331,7 @@
 				464FC1A824693FC50005D833 /* VCBlockingQueue.c in Sources */,
 				464F79D424652FBB00007DDE /* SceneDelegate.m in Sources */,
 				464FC19F24693F290005D833 /* VCDictionary.c in Sources */,
+				4650D3A324728EC100D47878 /* VCSqliteStmt.c in Sources */,
 				464F7A072465301200007DDE /* VCBase.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,14 +501,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Example/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.GodL.github.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -507,6 +522,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Example/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

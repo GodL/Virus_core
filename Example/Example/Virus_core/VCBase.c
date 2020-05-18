@@ -7,3 +7,5 @@
 //
 
 #include "VCBase.h"
+
+const VCRange VCRangeZero = {0,0};

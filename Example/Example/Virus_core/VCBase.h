@@ -12,6 +12,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
+#include <stdbool.h>
+#include <assert.h>
 
 #ifdef __cplusplus
 #define VC_EXTERN_C_BEGIN extern "C" {
@@ -53,7 +56,8 @@ VC_EXTERN_C_BEGIN
 #endif
 
 enum {
-    kVCNotSupport = -1
+    kVCNotSupport = -1,
+    kVCNotFound = -2
 };
 
 #if __LLP64__
@@ -72,7 +76,21 @@ typedef unsigned long VCHashCode;
 
 #define VCMIN(x,y) (x) <= (y) ? (x) : (y)
 
-typedef unsigned char VCBool;
+#define VCMAX(x,y) (x) >= (y) ? (x) : (y)
+
+typedef struct {
+    VCIndex location;
+    VCIndex length;
+} VCRange;
+
+VC_INLINE VCRange VCRangeMake(VCIndex location,VCIndex length) {
+    VCRange range;
+    range.location = location;
+    range.length = length;
+    return range;
+}
+
+VC_OPEN const VCRange VCRangeZero;
 
 typedef const void * VCTypeRef;
 
@@ -82,7 +100,9 @@ VC_OPEN void VCRetain(VCTypeRef vc);
 
 VC_OPEN void VCRelease(VCTypeRef vc);
 
-VC_OPEN VCBool VCEqual(VCTypeRef vc1,VCTypeRef vc2);
+VC_OPEN VCIndex VCGetRetainCount(VCTypeRef vc);
+
+VC_OPEN bool VCEqual(VCTypeRef vc1,VCTypeRef vc2);
 
 VC_OPEN VCHashCode VCHash(VCTypeRef vc);
 
