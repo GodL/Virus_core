@@ -7,3 +7,8 @@
 //
 
 #include "VCLinkedList.h"
+#include "VCRuntime.h"
+
+typedef struct __VCLinkedList {
+    
+} VCLinedList;

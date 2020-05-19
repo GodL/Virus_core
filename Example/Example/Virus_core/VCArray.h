@@ -20,16 +20,18 @@ typedef void (*VCArrayApplierFunction)(const void *value, void *context);
 typedef const void *(*VCArrayRetainCallback)(const void *value);
 typedef void (*VCArrayReleaseCallback)(const void *value);
 typedef bool (*VCArrayEqualCallback)(const void *value1,const void *value2);
-typedef void (*VCArrayDeallocCllback)(const void *value);
 
 typedef struct __VCArrayCallback {
     VCArrayRetainCallback retain;
     VCArrayReleaseCallback release;
     VCArrayEqualCallback equal;
-    VCArrayDeallocCllback dealloc;
 } VCArrayCallback;
 
-VC_OPEN const VCArrayCallback kVCTypeArrayCallback;
+VC_OPEN
+const VCArrayCallback kVCTypeArrayCallback;
+
+VC_OPEN
+const VCArrayCallback kVCCopyStringArrayCallback;
 
 VC_OPEN VCTypeID VCArrayGetTypeID(void);
 

@@ -7,3 +7,8 @@
 //
 
 #include "VCBlockingQueue.h"
+
+
+typedef struct __VCBlockingQueue {
+    
+} VCBlockingQueue;

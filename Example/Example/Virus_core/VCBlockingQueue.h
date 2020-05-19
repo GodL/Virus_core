@@ -9,6 +9,12 @@
 #ifndef VCBlockingQueue_h
 #define VCBlockingQueue_h
 
-#include <stdio.h>
+#include "VCBase.h"
+
+VC_EXTERN_C_BEGIN
+
+typedef struct __VCBlockingQueue * VCBlockingQueueRef;
+
+VC_EXTERN_C_END
 
 #endif /* VCBlockingQueue_h */

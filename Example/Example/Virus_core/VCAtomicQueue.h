@@ -9,6 +9,13 @@
 #ifndef VCAtomicQueue_h
 #define VCAtomicQueue_h
 
-#include <stdio.h>
+#include "VCBase.h"
+
+VC_EXTERN_C_BEGIN
+
+typedef struct __VCAtomicQueue * VCAtomicQueueRef;
+
+VC_EXTERN_C_END
+
 
 #endif /* VCAtomicQueue_h */

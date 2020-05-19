@@ -150,6 +150,20 @@ static void __VCArrayDealloc(VCTypeRef vc) {
     arr = NULL;
 }
 
+static const void * __VCArrayStringRetain(const void *value) {
+    assert(value);
+    return strdup(value);
+}
+
+static void __VCArrayStringRelease(const void *value) {
+    assert(value);
+    free((void *)value);
+}
+
+static bool __VCArrayStringEqual(const void *value1,const void *value2) {
+    return strcmp(value1, value2) == 0;
+}
+
 static VCTypeID *__kVCArrayType = NULL;
 
 static const VCRuntimeClass __VCArrayClass = {
@@ -172,7 +186,17 @@ const VCArray array0 = {
     (void *)&immutable0
 };
 
-const VCArrayCallback kVCTypeArrayCallback = {};
+const VCArrayCallback kVCTypeArrayCallback = {
+    (VCArrayRetainCallback)VCRetain,
+    VCRelease,
+    VCEqual
+};
+
+const VCArrayCallback kVCCopyStringArrayCallback = {
+    __VCArrayStringRetain,
+    __VCArrayStringRelease,
+    __VCArrayStringEqual
+};
 
 VCTypeID VCArrayGetTypeID(void) {
     return VCRuntimeRegisterClass(__kVCArrayType, __VCArrayClass);

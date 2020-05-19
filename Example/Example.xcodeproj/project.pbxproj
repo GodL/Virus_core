@@ -25,6 +25,7 @@
 		464FC1A824693FC50005D833 /* VCBlockingQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 464FC1A724693FC50005D833 /* VCBlockingQueue.c */; };
 		4650D3A024728B5900D47878 /* VCSqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 4650D39F24728B5900D47878 /* VCSqlite3.c */; };
 		4650D3A324728EC100D47878 /* VCSqliteStmt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4650D3A224728EC100D47878 /* VCSqliteStmt.c */; };
+		46BE89732473D21100264A35 /* VCLRUCache.c in Sources */ = {isa = PBXBuildFile; fileRef = 46BE89722473D21100264A35 /* VCLRUCache.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 		4650D39F24728B5900D47878 /* VCSqlite3.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCSqlite3.c; sourceTree = "<group>"; };
 		4650D3A124728EC100D47878 /* VCSqliteStmt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCSqliteStmt.h; sourceTree = "<group>"; };
 		4650D3A224728EC100D47878 /* VCSqliteStmt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCSqliteStmt.c; sourceTree = "<group>"; };
+		46BE89712473D21100264A35 /* VCLRUCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCLRUCache.h; sourceTree = "<group>"; };
+		46BE89722473D21100264A35 /* VCLRUCache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCLRUCache.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +181,8 @@
 				464FC19E24693F290005D833 /* VCDictionary.c */,
 				464FC1A024693F640005D833 /* VCLinkedList.h */,
 				464FC1A124693F640005D833 /* VCLinkedList.c */,
+				46BE89712473D21100264A35 /* VCLRUCache.h */,
+				46BE89722473D21100264A35 /* VCLRUCache.c */,
 				464FC1A324693F9A0005D833 /* VCAtomicQueue.h */,
 				464FC1A424693F9A0005D833 /* VCAtomicQueue.c */,
 				464FC1A624693FC50005D833 /* VCBlockingQueue.h */,
@@ -325,6 +330,7 @@
 				4650D3A024728B5900D47878 /* VCSqlite3.c in Sources */,
 				464691DF2466992D00FE10F6 /* VCRuntime.c in Sources */,
 				464F79D124652FBB00007DDE /* AppDelegate.m in Sources */,
+				46BE89732473D21100264A35 /* VCLRUCache.c in Sources */,
 				464FC19C24693EFF0005D833 /* VCArray.c in Sources */,
 				464FC1A224693F640005D833 /* VCLinkedList.c in Sources */,
 				464F79E224652FC600007DDE /* main.m in Sources */,

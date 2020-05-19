@@ -7,3 +7,8 @@
 //
 
 #include "VCAtomicQueue.h"
+
+
+typedef struct __VCAtomicQueue {
+    
+} VCAtomicQueue;

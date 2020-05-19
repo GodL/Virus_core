@@ -14,6 +14,7 @@
 #include <limits.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <assert.h>
 
 #ifdef __cplusplus
@@ -63,12 +64,14 @@ enum {
 #if __LLP64__
 typedef unsigned long long VCTypeID;
 typedef signed long long VCIndex;
+typedef double VCFloat;
 typedef unsigned long long VCHashCode;
 
 #define VC_INT_MAX LONG_MAX
 #else
 typedef unsigned long VCTypeID;
 typedef signed long VCIndex;
+typedef float VCFloat;
 typedef unsigned long VCHashCode;
 
 #define VC_INT_MAX INT_MAX
