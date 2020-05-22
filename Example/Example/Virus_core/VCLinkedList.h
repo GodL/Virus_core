@@ -60,7 +60,7 @@ VC_OPEN
 void VCLinkedListRemoveValueAtIndex(VCLinkedListRef ref,VCIndex index);
 
 VC_OPEN
-const VCNodeRef VCLinkedListGetNodeAtIndex(VCLinkedListRef ref,VCIndex index);
+VCNodeRef VCLinkedListGetNodeAtIndex(VCLinkedListRef ref,VCIndex index);
 
 VC_OPEN
 const void *VCLinkedListGetValueAtIndex(VCLinkedListRef ref,VCIndex index);

@@ -16,6 +16,12 @@ typedef struct __VCLinkedList {
     VCIndex count;
 } VCLinedList;
 
+VC_INLINE void __VCNodeDealloc(VCNodeRef node) {
+    assert(node);
+    free(node);
+    node = NULL;
+}
+
 static void __VCLinkedListInit(VCTypeRef ref) {
     VCLinkedListRef linkedList = (VCLinkedListRef)ref;
     linkedList->head = linkedList->tail = NULL;
@@ -50,6 +56,12 @@ VC_INLINE const VCLinkedListCallback * __VCLinkedListGetCallback(VCLinkedListRef
 VC_INLINE VCNodeRef __VCLinkedListGetNodeAtIndex(VCLinkedListRef ref,VCIndex index) {
     return NULL;
 }
+
+const VCLinkedListCallback kVCTypeLinkedListCallback = {
+    (VCLinkedListRetainCallback)VCRetain,
+    (VCLinkedListReleaseCallback)VCRelease,
+    (VCLinkedListEqualCallback)VCEqual
+};
 
 static const VCRuntimeClass __VCLinkedListClass = {
     "VCLinkedList",
@@ -135,5 +147,96 @@ void VCLinkedListInsertValueAtIndex(VCLinkedListRef ref,const void *value,VCInde
     if (cb && cb->retain) value = cb->retain(value);
     new->value = value;
     VCNodeRef node = __VCLinkedListGetNodeAtIndex(ref,index);
+    new->next = node;
+    new->prev = node->prev;
+    node->prev->next = new;
+    node->prev = new;
+    ref->count ++;
+}
+
+void VCLinkedListRemoveHead(VCLinkedListRef ref) {
+    VCLinkedListRemoveValueAtIndex(ref, 0);
+}
+
+void VCLinkedListRemoveTail(VCLinkedListRef ref) {
+    VCLinkedListRemoveValueAtIndex(ref, ref->count - 1);
+}
+
+void VCLinkedListRemoveValueAtIndex(VCLinkedListRef ref,VCIndex index) {
+    VCNodeRef node = VCLinkedListGetNodeAtIndex(ref, index);
+    if (VC_UNLIKELY(node == NULL)) return;
+    if (index == 0) {
+        ref->head = node->next;
+        ref->head->prev = NULL;
+    }else if (index == ref->count - 1) {
+        ref->tail = node->prev;
+        ref->tail->next = NULL;
+    }else {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+    }
     
+    const VCLinkedListCallback *cb = __VCLinkedListGetCallback(ref);
+    if (cb && cb->release) cb->release(node->value);
+    __VCNodeDealloc(node);
+    ref->count --;
+}
+
+VCNodeRef VCLinkedListGetNodeAtIndex(VCLinkedListRef ref,VCIndex index) {
+    assert(ref);
+    assert(index >= ref->count);
+    VCNodeRef result = NULL;
+    if (index < ref->count/2) {
+        result = ref->head;
+        while (index -- && result) result = result->next;
+    }else {
+        result = ref->tail;
+        while (index -- && result) result = result->prev;
+    }
+    return result;
+}
+
+const void *VCLinkedListGetValueAtIndex(VCLinkedListRef ref,VCIndex index) {
+    return VCLinkedListGetNodeAtIndex(ref, index)->value;
+}
+
+void VCLinkedListNodeToHead(VCLinkedListRef ref,VCNodeRef node) {
+    assert(ref);
+    assert(node);
+    if (ref->head == node) return;
+    if (node->prev) node->prev->next = node->next;
+    if (node->next) node->next->prev = node->prev;
+    if (ref->tail == node) ref->tail = node->prev;
+    ref->head->prev = node;
+    node->next = ref->head;
+    node->prev = NULL;
+    ref->head = node;
+}
+
+void VCLinkedListNodeToTail(VCLinkedListRef ref,VCNodeRef node) {
+    assert(ref);
+    assert(node);
+    if (node == ref->tail) return;
+    if (node->prev) node->prev->next = node->next;
+    if (node->next) node->next->prev = node->prev;
+    if (ref->head == node) ref->head = node->next;
+    ref->tail->next = node;
+    node->prev = ref->tail;
+    node->next = NULL;
+    ref->tail = node;
+}
+
+void VCLinkedListRemoveAllValues(VCLinkedListRef ref) {
+    assert(ref);
+    VCNodeRef current = ref->head;
+    VCNodeRef next = NULL;
+    const VCLinkedListCallback *cb = __VCLinkedListGetCallback(ref);
+    while (current) {
+        next = current->next;
+        if (cb && cb->release) cb->release(current->value);
+        __VCNodeDealloc(current);
+        current = next;
+    }
+    ref->head = ref->tail = NULL;
+    ref->count = 0;
 }
