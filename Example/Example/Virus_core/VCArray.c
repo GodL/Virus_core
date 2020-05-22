@@ -208,7 +208,6 @@ VCArrayRef VCArrayCreate(const void **values,VCIndex numValues,const VCArrayCall
     if (VC_UNLIKELY(ref == NULL)) return NULL;
     VCRuntimeBase *base = (VCRuntimeBase *)ref;
     base->info[0] = 0;
-    base->info[1] = VCArrayGetTypeID();
     VCArrayImmutable *immutable = malloc(sizeof(VCArrayImmutable) + numValues * sizeof(void *));
     if (VC_UNLIKELY(immutable == NULL)) {
         __VCArrayDealloc(ref);

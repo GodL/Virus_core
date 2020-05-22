@@ -13,6 +13,7 @@
 #include "VCArray.h"
 
 typedef struct __VCSqlite3 {
+    VCRuntimeBase *base;
     sqlite3 *db;
     bool opened;
     const char *dbPath;
