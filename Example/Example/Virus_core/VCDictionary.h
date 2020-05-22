@@ -47,6 +47,9 @@ typedef struct __VCDictionary * VCDictionaryRef;
 
 typedef struct __VCDictionary * VCMutableDictionaryRef;
 
+VC_OPEN
+VCTypeID VCDictionaryGetTypeID(void);
+
 VC_EXTERN_C_END
 
 #endif /* VCDictionary_h */
