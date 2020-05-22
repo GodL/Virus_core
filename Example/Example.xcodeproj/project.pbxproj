@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		464691DF2466992D00FE10F6 /* VCRuntime.c in Sources */ = {isa = PBXBuildFile; fileRef = 464691DE2466992D00FE10F6 /* VCRuntime.c */; };
 		464F79D124652FBB00007DDE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 464F79D024652FBB00007DDE /* AppDelegate.m */; };
-		464F79D424652FBB00007DDE /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 464F79D324652FBB00007DDE /* SceneDelegate.m */; };
-		464F79D724652FBB00007DDE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 464F79D624652FBB00007DDE /* ViewController.m */; };
 		464F79DA24652FBB00007DDE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 464F79D824652FBB00007DDE /* Main.storyboard */; };
 		464F79DC24652FC600007DDE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 464F79DB24652FC600007DDE /* Assets.xcassets */; };
 		464F79DF24652FC600007DDE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 464F79DD24652FC600007DDE /* LaunchScreen.storyboard */; };
@@ -51,10 +49,6 @@
 		464F79CC24652FBA00007DDE /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		464F79CF24652FBB00007DDE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		464F79D024652FBB00007DDE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		464F79D224652FBB00007DDE /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		464F79D324652FBB00007DDE /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
-		464F79D524652FBB00007DDE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		464F79D624652FBB00007DDE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		464F79D924652FBB00007DDE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		464F79DB24652FC600007DDE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		464F79DE24652FC600007DDE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -137,10 +131,6 @@
 				464F7A0424652FF200007DDE /* Virus_core */,
 				464F79CF24652FBB00007DDE /* AppDelegate.h */,
 				464F79D024652FBB00007DDE /* AppDelegate.m */,
-				464F79D224652FBB00007DDE /* SceneDelegate.h */,
-				464F79D324652FBB00007DDE /* SceneDelegate.m */,
-				464F79D524652FBB00007DDE /* ViewController.h */,
-				464F79D624652FBB00007DDE /* ViewController.m */,
 				464F79D824652FBB00007DDE /* Main.storyboard */,
 				464F79DB24652FC600007DDE /* Assets.xcassets */,
 				464F79DD24652FC600007DDE /* LaunchScreen.storyboard */,
@@ -325,7 +315,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				464F79D724652FBB00007DDE /* ViewController.m in Sources */,
 				464FC1A524693F9A0005D833 /* VCAtomicQueue.c in Sources */,
 				4650D3A024728B5900D47878 /* VCSqlite3.c in Sources */,
 				464691DF2466992D00FE10F6 /* VCRuntime.c in Sources */,
@@ -335,7 +324,6 @@
 				464FC1A224693F640005D833 /* VCLinkedList.c in Sources */,
 				464F79E224652FC600007DDE /* main.m in Sources */,
 				464FC1A824693FC50005D833 /* VCBlockingQueue.c in Sources */,
-				464F79D424652FBB00007DDE /* SceneDelegate.m in Sources */,
 				464FC19F24693F290005D833 /* VCDictionary.c in Sources */,
 				4650D3A324728EC100D47878 /* VCSqliteStmt.c in Sources */,
 				464F7A072465301200007DDE /* VCBase.c in Sources */,
