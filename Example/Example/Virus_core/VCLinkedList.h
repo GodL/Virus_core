@@ -33,6 +33,9 @@ typedef struct __VCNode {
 
 typedef VCNode * VCNodeRef;
 
+VC_OPEN
+VCNodeRef VCNodeCreate(const void *value);
+
 typedef struct __VCLinkedList * VCLinkedListRef;
 
 VC_OPEN
@@ -40,6 +43,9 @@ VCTypeID VCLinkedListGetTypeID(void);
 
 VC_OPEN
 VCLinkedListRef VCLinkedListCreate(const VCLinkedListCallback *callback);
+
+VC_OPEN
+VCIndex VCLinkedListGetCount(VCLinkedListRef ref);
 
 VC_OPEN
 void VCLinkedListAddHead(VCLinkedListRef ref,const void *value);
@@ -58,6 +64,9 @@ void VCLinkedListRemoveTail(VCLinkedListRef ref);
 
 VC_OPEN
 void VCLinkedListRemoveValueAtIndex(VCLinkedListRef ref,VCIndex index);
+
+VC_OPEN
+void VCLinkedListRemoveNode(VCLinkedListRef ref,VCNodeRef node);
 
 VC_OPEN
 VCNodeRef VCLinkedListGetNodeAtIndex(VCLinkedListRef ref,VCIndex index);

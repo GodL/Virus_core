@@ -74,7 +74,7 @@ static const VCRuntimeClass __VCLinkedListClass = {
 
 static VCTypeID *__VCLinkedLisTypeID = NULL;
 
-VC_INLINE VCNodeRef VCNodeCreate(const void *value) {
+VCNodeRef VCNodeCreate(const void *value) {
     VCNodeRef ref = calloc(1, sizeof(VCNode));
     if (ref == NULL) return NULL;
     ref->value = value;
@@ -92,6 +92,12 @@ VCLinkedListRef VCLinkedListCreate(const VCLinkedListCallback *callback) {
     VCRuntimeBase *base = ref->base;
     base->callback = (uintptr_t)callback;
     return ref;
+}
+
+VCIndex VCLinkedListGetCount(VCLinkedListRef ref) {
+    assert(ref);
+    if (VC_UNLIKELY(ref == NULL)) return 0;
+    return ref->count;
 }
 
 void VCLinkedListAddHead(VCLinkedListRef ref,const void *value) {
@@ -164,11 +170,17 @@ void VCLinkedListRemoveTail(VCLinkedListRef ref) {
 
 void VCLinkedListRemoveValueAtIndex(VCLinkedListRef ref,VCIndex index) {
     VCNodeRef node = VCLinkedListGetNodeAtIndex(ref, index);
+    VCLinkedListRemoveNode(ref, node);
+}
+
+void VCLinkedListRemoveNode(VCLinkedListRef ref,VCNodeRef node) {
+    assert(ref);
+    assert(node);
     if (VC_UNLIKELY(node == NULL)) return;
-    if (index == 0) {
+    if (node == ref->head) {
         ref->head = node->next;
         ref->head->prev = NULL;
-    }else if (index == ref->count - 1) {
+    }else if (node == ref->tail) {
         ref->tail = node->prev;
         ref->tail->next = NULL;
     }else {

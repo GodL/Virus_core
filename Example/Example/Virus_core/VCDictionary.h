@@ -43,12 +43,50 @@ const VCDictionaryValueCallback kVCTypeDictionaryValueCallback;
 VC_OPEN
 const VCDictionaryValueCallback kVCCopyStringDictionaryValueCallback;
 
+typedef void (*VCDictionaryApplierFunction)(const void *key,const void *value,const void *context);
+
 typedef struct __VCDictionary * VCDictionaryRef;
 
 typedef struct __VCDictionary * VCMutableDictionaryRef;
 
 VC_OPEN
 VCTypeID VCDictionaryGetTypeID(void);
+
+VC_OPEN
+VCDictionaryRef VCDictionaryCreate(const void **keys,const void **values,VCIndex numValues,const VCDictionaryKeyCallback *keyCallback,const VCDictionaryValueCallback *valueCallback);
+
+VC_OPEN
+VCDictionaryRef VCDictionaryCreateCopy(VCDictionaryRef other);
+
+VC_OPEN
+VCMutableDictionaryRef VCDictionaryCreateMutable(VCIndex capacity,const VCDictionaryKeyCallback *keyCallback,const VCDictionaryValueCallback *valueCallback);
+
+VC_OPEN
+VCIndex VCDictionaryGetCount(VCDictionaryRef ref);
+
+VC_OPEN
+bool VCDictionaryContainsKey(VCDictionaryRef ref,const void *key);
+
+VC_OPEN
+bool VCDictionaryContainsValue(VCDictionaryRef ref,const void *value);
+
+VC_OPEN
+const void *VCDictionaryGetValue(VCDictionaryRef ref,const void *key);
+
+VC_OPEN
+void VCDictionaryApplyFunction(VCDictionaryRef ref,VCDictionaryApplierFunction applier,void *context);
+
+VC_OPEN
+void VCDictionarySetValue(VCMutableDictionaryRef ref,const void *key,const void *value);
+
+VC_OPEN
+void VCDictionaryReplaceValue(VCMutableDictionaryRef ref,const void *key,const void *value);
+
+VC_OPEN
+void VCDictionaryRemoveValue(VCMutableDictionaryRef ref,const void *key);
+
+VC_OPEN
+void VCDictionaryRemoveAllValues(VCMutableDictionaryRef ref);
 
 VC_EXTERN_C_END
 
