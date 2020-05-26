@@ -99,7 +99,7 @@ typedef const void * VCTypeRef;
 
 VC_OPEN VCTypeID VCGetTypeID(VCTypeRef vc);
 
-VC_OPEN void VCRetain(VCTypeRef vc);
+VC_OPEN VCTypeRef VCRetain(VCTypeRef vc);
 
 VC_OPEN void VCRelease(VCTypeRef vc);
 

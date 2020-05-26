@@ -46,10 +46,11 @@ VCTypeID VCGetTypeID(VCTypeRef vc) {
     return base->info[1];
 }
 
-void VCRetain(VCTypeRef vc) {
+VCTypeRef VCRetain(VCTypeRef vc) {
     assert(vc);
     VCRuntimeBase *base = (VCRuntimeBase *)vc;
     __sync_fetch_and_add_4(&base->retainCount, 1);
+    return vc;
 }
 
 void VCRelease(VCTypeRef vc) {

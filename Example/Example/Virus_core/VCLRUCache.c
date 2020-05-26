@@ -30,6 +30,25 @@ typedef struct __VCLRUCache {
     const VCLRUCacheValueCallback *valueCallback;
 } VCLRUCache;
 
+const VCLRUCacheKeyCallback kVCTypeLRUCacheKeyCallback = {
+    VCRetain,
+    VCRelease,
+    VCEqual,
+    VCHash
+};
+
+const VCLRUCacheKeyCallback kVCCopyStringLRUCacheKeyCallback = {
+    kVCCopyStringDictionaryKeyCallback.retain,
+    kVCCopyStringDictionaryKeyCallback.release,
+    kVCCopyStringDictionaryKeyCallback.equal,
+    kVCCopyStringDictionaryKeyCallback.hash
+};
+
+const VCLRUCacheValueCallback kVCTypeLRUCacheValueCallback = {
+    VCRetain,
+    VCRelease
+};
+
 static void __VCLRUCacheDealloc(VCTypeRef ref) {
     assert(ref);
     VCLRUCacheRef cache = (VCLRUCacheRef)ref;

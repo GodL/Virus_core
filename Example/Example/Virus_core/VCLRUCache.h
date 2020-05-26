@@ -31,13 +31,13 @@ typedef struct {
 } VCLRUCacheValueCallback;
 
 VC_OPEN
-const VCLRUCacheKeyCallback *KVCTypeLRUCacheKeyCallback;
+const VCLRUCacheKeyCallback kVCTypeLRUCacheKeyCallback;
 
 VC_OPEN
-const VCLRUCacheKeyCallback *kVCCopyStringLRUCacheKeyCallback;
+const VCLRUCacheKeyCallback kVCCopyStringLRUCacheKeyCallback;
 
 VC_OPEN
-const VCLRUCacheValueCallback *kVCTypeLRUCacheValueCallback;
+const VCLRUCacheValueCallback kVCTypeLRUCacheValueCallback;
 
 typedef struct __VCLRUCache * VCLRUCacheRef;
 

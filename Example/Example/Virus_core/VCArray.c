@@ -187,7 +187,7 @@ const VCArray array0 = {
 };
 
 const VCArrayCallback kVCTypeArrayCallback = {
-    (VCArrayRetainCallback)VCRetain,
+    VCRetain,
     VCRelease,
     VCEqual
 };

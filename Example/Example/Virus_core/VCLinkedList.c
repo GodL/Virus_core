@@ -58,9 +58,9 @@ VC_INLINE VCNodeRef __VCLinkedListGetNodeAtIndex(VCLinkedListRef ref,VCIndex ind
 }
 
 const VCLinkedListCallback kVCTypeLinkedListCallback = {
-    (VCLinkedListRetainCallback)VCRetain,
-    (VCLinkedListReleaseCallback)VCRelease,
-    (VCLinkedListEqualCallback)VCEqual
+    VCRetain,
+    VCRelease,
+    VCEqual
 };
 
 static const VCRuntimeClass __VCLinkedListClass = {
