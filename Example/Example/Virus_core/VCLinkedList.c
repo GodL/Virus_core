@@ -72,8 +72,6 @@ static const VCRuntimeClass __VCLinkedListClass = {
     __VCLinedListDealloc
 };
 
-static VCTypeID *__VCLinkedLisTypeID = NULL;
-
 VCNodeRef VCNodeCreate(const void *value) {
     VCNodeRef ref = calloc(1, sizeof(VCNode));
     if (ref == NULL) return NULL;
@@ -81,6 +79,8 @@ VCNodeRef VCNodeCreate(const void *value) {
     ref->next = ref->prev = NULL;
     return ref;
 }
+
+static volatile VCTypeID __VCLinkedLisTypeID = 0;
 
 VCTypeID VCLinkedListGetTypeID(void) {
     return VCRuntimeRegisterClass(__VCLinkedLisTypeID, __VCLinkedListClass);

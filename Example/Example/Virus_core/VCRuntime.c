@@ -24,14 +24,14 @@ VCTypeRef VCRuntimeCreateInstance(VCTypeID typeID,VCIndex extraSize) {
     return ref;
 }
 
-VCTypeID VCRuntimeRegisterClass(volatile VCTypeID *typeID,VCRuntimeClass runtimeClass) {
-    if (*typeID != 0) return *typeID;
-    VCTypeID new = __sync_fetch_and_add_4(&VCRuntimeClassTableCount,1);
+VCTypeID VCRuntimeRegisterClass(volatile VCTypeID typeID,VCRuntimeClass runtimeClass) {
+    if (typeID != 0) return typeID;
+    VCTypeID new = __sync_add_and_fetch_8(&VCRuntimeClassTableCount,1);
     if (new >= kVCRuntimeClassTableSize) return kVCNotSupport;
-    if (__sync_bool_compare_and_swap(&typeID,&new,NULL)) {
+    if (__sync_bool_compare_and_swap_8(&typeID,0,new)) {
         VCRuntimeClassTable[new] = runtimeClass;
     }else {
-        new = __sync_fetch_and_sub_4(&VCRuntimeClassTableCount, 1);
+        new = __sync_sub_and_fetch_8(&VCRuntimeClassTableCount, 1);
     }
     return new;
 }

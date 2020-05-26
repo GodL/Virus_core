@@ -30,7 +30,7 @@ typedef struct __VCRuntimeBase {
 
 VC_OPEN VCTypeRef VCRuntimeCreateInstance(VCTypeID typeID,VCIndex extraSize);
 
-VC_OPEN VCTypeID VCRuntimeRegisterClass(volatile VCTypeID *typeID,VCRuntimeClass runtimeClass);
+VC_OPEN VCTypeID VCRuntimeRegisterClass(volatile VCTypeID typeID,VCRuntimeClass runtimeClass);
 
 VC_OPEN VCRuntimeClass VCRuntimeGetClass(VCTypeID typeID);
 

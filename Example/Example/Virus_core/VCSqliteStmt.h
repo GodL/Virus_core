@@ -25,7 +25,7 @@ typedef struct __VCSqliteStmtCallback {
 
 typedef struct __VCSqliteStmt * VCSqliteStmtRef;
 
-VC_OPEN const VCSqliteStmtCallback kVCDefaultSqliteStmtCallback;
+VC_OPEN const VCSqliteStmtCallback kVCDefaultSqliteStmtCallback;//default is reset stmt and finalize stmt
 
 VC_OPEN VCTypeID VCSqliteStmtGetTypeID(void);
 

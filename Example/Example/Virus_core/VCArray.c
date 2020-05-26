@@ -164,8 +164,6 @@ static bool __VCArrayStringEqual(const void *value1,const void *value2) {
     return strcmp(value1, value2) == 0;
 }
 
-static VCTypeID *__kVCArrayType = NULL;
-
 static const VCRuntimeClass __VCArrayClass = {
     "VCArray",
     NULL,
@@ -197,6 +195,8 @@ const VCArrayCallback kVCCopyStringArrayCallback = {
     __VCArrayStringRelease,
     __VCArrayStringEqual
 };
+
+static volatile VCTypeID __kVCArrayType = 0;
 
 VCTypeID VCArrayGetTypeID(void) {
     return VCRuntimeRegisterClass(__kVCArrayType, __VCArrayClass);

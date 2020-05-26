@@ -79,7 +79,7 @@ const VCSqliteStmtCallback kVCDefaultSqliteStmtCallback = {
     __VCSqliteStmtDefaultEqual
 };
 
-static VCTypeID *__kVCSqliteStmtType = NULL;
+static volatile VCTypeID __kVCSqliteStmtType = 0;
 
 VCTypeID VCSqliteStmtGetTypeID(void) {
     return VCRuntimeRegisterClass(__kVCSqliteStmtType, __VCSqliteStmtClass);
@@ -90,8 +90,7 @@ VCSqliteStmtRef VCSqliteStmtCreate(const void *stmt,const VCSqliteStmtCallback *
     if (VC_UNLIKELY(ref == NULL)) return NULL;
     VCRuntimeBase *base = (VCRuntimeBase *)ref;
     base->callback = (uintptr_t)callback;
-    base->retainCount = 1;
-    base->info[0] = 0;
+    base->info[0] = false;
     ref->stmt = (sqlite3_stmt *)stmt;
     __VCSqliteStmtInit(ref);
     return ref;

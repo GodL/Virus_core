@@ -112,7 +112,7 @@ const VCRuntimeClass __VCLRUCacheRuntime = {
     __VCLRUCacheDealloc
 };
 
-static VCTypeID *__VCLRUCacheTypeID = NULL;
+static volatile VCTypeID __VCLRUCacheTypeID = 0;
 
 VCTypeID VCLRUCacheGetTypeID(void) {
     return VCRuntimeRegisterClass(__VCLRUCacheTypeID, __VCLRUCacheRuntime);

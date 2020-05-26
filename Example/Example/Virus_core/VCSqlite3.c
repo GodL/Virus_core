@@ -56,7 +56,7 @@ static const VCRuntimeClass __VCSqlite3Class = {
     __VCSqlite3Dealloc
 };
 
-static VCTypeID *__VCSqlite3TypeID = NULL;
+static volatile VCTypeID __VCSqlite3TypeID = 0;
 
 VCTypeID VCSqlite3GetTypeID(void) {
     return VCRuntimeRegisterClass(__VCSqlite3TypeID, __VCSqlite3Class);
