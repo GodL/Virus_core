@@ -23,9 +23,8 @@ VC_INLINE const VCSqliteStmtCallback *__VCSqliteStmtGetCallback(VCSqliteStmtRef 
     return (const VCSqliteStmtCallback *)base->callback;
 }
 
-static void __VCSqliteStmtInit(VCTypeRef ref) {
-    VCSqliteStmtRef sqliteStmt = (VCSqliteStmtRef)ref;
-    sqlite3_stmt *stmt = (sqlite3_stmt *)__VCSqliteStmtGetStmt(sqliteStmt);
+static void __VCSqliteStmtInit(VCSqliteStmtRef ref) {
+    sqlite3_stmt *stmt = (sqlite3_stmt *)__VCSqliteStmtGetStmt(ref);
     if (stmt) {
         sqlite3_reset(stmt);
     }
@@ -67,7 +66,7 @@ static bool __VCSqliteStmtDefaultEqual(const void *stmt1,const void *stmt2) {
 
 static const VCRuntimeClass __VCSqliteStmtClass = {
     "VCSqliteStmt",
-    __VCSqliteStmtInit,
+    NULL,
     NULL,
     __VCSqliteStmtEqual,
     __VCSqliteStmtHash,
@@ -93,8 +92,8 @@ VCSqliteStmtRef VCSqliteStmtCreate(const void *stmt,const VCSqliteStmtCallback *
     base->callback = (uintptr_t)callback;
     base->retainCount = 1;
     base->info[0] = 0;
-    base->info[1] = VCSqliteStmtGetTypeID();
     ref->stmt = (sqlite3_stmt *)stmt;
+    __VCSqliteStmtInit(ref);
     return ref;
 }
 

@@ -9,28 +9,26 @@
 #include "VCSqlite3.h"
 #include "VCRuntime.h"
 #include <sqlite3.h>
-#include "VCDictionary.h"
+#include "VCLRUCache.h"
 #include "VCArray.h"
 
 typedef struct __VCSqlite3 {
     VCRuntimeBase *base;
     sqlite3 *db;
-    bool opened;
     const char *dbPath;
-    VCDictionaryRef stmtCache;
+    VCLRUCacheRef stmtCache;
 } VCSqlite3;
 
-static void __VCSqlite3Init(VCTypeRef ref) {
+static void __VCSqlite3Init(VCSqlite3Ref ref) {
     assert(ref);
-    VCSqlite3Ref sqlite3 = (VCSqlite3Ref)ref;
-    assert(sqlite3->dbPath);
-    if (VC_UNLIKELY(!sqlite3->dbPath)) return;
-    if (sqlite3_open(sqlite3->dbPath, &sqlite3->db) != SQLITE_OK) {
-        printf("sqlite open failed on %s errcode %d  errmsg %s\n",sqlite3->dbPath,sqlite3_errcode(sqlite3->db),sqlite3_errmsg(sqlite3->db));
-        sqlite3_close(sqlite3->db);
+    assert(ref->dbPath);
+    if (VC_UNLIKELY(!ref->dbPath)) return;
+    if (sqlite3_open(ref->dbPath, &ref->db) != SQLITE_OK) {
+        printf("sqlite open failed on %s errcode %d  errmsg %s\n",ref->dbPath,sqlite3_errcode(ref->db),sqlite3_errmsg(ref->db));
+        sqlite3_close(ref->db);
         return;
     }
-    sqlite3->opened = true;
+    ref->base->info[0] = true;
 }
 
 static VCHashCode __VCSqlite3Hash(VCTypeRef ref) {
@@ -51,7 +49,7 @@ static void __VCSqlite3Dealloc(VCTypeRef ref) {
 
 static const VCRuntimeClass __VCSqlite3Class = {
     "VCSqlite3",
-    __VCSqlite3Init,
+    NULL,
     NULL,
     NULL,
     __VCSqlite3Hash,
@@ -63,7 +61,6 @@ static VCTypeID *__VCSqlite3TypeID = NULL;
 VCTypeID VCSqlite3GetTypeID(void) {
     return VCRuntimeRegisterClass(__VCSqlite3TypeID, __VCSqlite3Class);
 }
-
 
 bool VCSqlite3Close(VCSqlite3Ref ref) {
     assert(ref);
