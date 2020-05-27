@@ -37,6 +37,9 @@ VC_OPEN
 VCAtomicQueueRef VCAtomicQueueCreate(const VCAtomicQueueCallback *callback);
 
 VC_OPEN
+VCIndex VCAtomicQueueGetCount(VCAtomicQueueRef ref);
+
+VC_OPEN
 void VCAtomicQueueEnqueue(VCAtomicQueueRef ref,const void *value);
 
 VC_OPEN

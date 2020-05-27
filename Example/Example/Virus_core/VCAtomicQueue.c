@@ -67,20 +67,14 @@ VC_INLINE void __VCAtomicQueueReleaseNode(VCAtomicQueueRef ref,VCAtomicQueueNode
     node = NULL;
 }
 
-VC_INLINE bool __VCAtomicQueueStringEqual(const void *c1,const void *c2) {
-    return c1 == c2 || strcmp(c1, c2) == 0;
-}
-
 const VCAtomicQueueCallback kVCTypeAtomicQueueCallback = {
     VCRetain,
     VCRelease,
-    VCEqual
 };
 
 const VCAtomicQueueCallback kVCCopyStringAtomicQueueCallback = {
     (VCAtomicQueueRetainCallback)strdup,
     (VCAtomicQueueReleaseCallback)free,
-    (VCAtomicQueueEqualCallback)__VCAtomicQueueStringEqual
 };
 
 const VCRuntimeClass __VCAtomicQueueClass = {
@@ -106,6 +100,12 @@ VCAtomicQueueRef VCAtomicQueueCreate(const VCAtomicQueueCallback *callback) {
     VCAtomicQueueNodeRef node = __VCAtomicQueueNodeCreate(NULL);
     ref->head = ref->tail = node;
     return ref;
+}
+
+VCIndex VCAtomicQueueGetCount(VCAtomicQueueRef ref) {
+    assert(ref);
+    if (VC_UNLIKELY(ref == NULL)) return 0;
+    return __VCAtomicQueueGetCount(ref);
 }
 
 void VCAtomicQueueEnqueue(VCAtomicQueueRef ref,const void *value) {
