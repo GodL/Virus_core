@@ -56,6 +56,11 @@ VC_EXTERN_C_BEGIN
 #   define VC_UNLIKELY(x) (x)
 #endif
 
+#define VC_CAS(address,old,new) __sync_bool_compare_and_swap(address,old,new)
+
+#define VC_ATOMIC_ADD(address,num) __sync_add_and_fetch_8(address,num)
+
+#define VC_ATOMIC_SUB(address,num) __sync_sub_and_fetch_8(address,num)
 enum {
     kVCNotSupport = -1,
     kVCNotFound = -2
