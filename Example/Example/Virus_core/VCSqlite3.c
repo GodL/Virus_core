@@ -65,9 +65,13 @@ VC_INLINE VCSqlite3StmtRef __VCSqlite3GetStmtFromCacheItem(VCLinkedListRef list)
     return stmt;
 }
 
+VC_INLINE void __VCSqlite3PrintfError(VCSqlite3Ref ref,char *from) {
+    printf("%s on %s errcode %d errmsg %s",from,ref->dbPath,sqlite3_errcode(ref->db) ,sqlite3_errmsg(ref->db));
+}
+
 VC_INLINE bool __VCSqlite3Open(VCSqlite3Ref ref) {
     if (sqlite3_open(ref->dbPath, &ref->db) != SQLITE_OK) {
-        printf("sqlite open failed on %s errcode %d  errmsg %s\n",ref->dbPath,sqlite3_errcode(ref->db),sqlite3_errmsg(ref->db));
+        __VCSqlite3PrintfError(ref,"sqlite open failed");
         sqlite3_close(ref->db);
         return false;
     }
@@ -75,10 +79,16 @@ VC_INLINE bool __VCSqlite3Open(VCSqlite3Ref ref) {
     return true;
 }
 
+VC_INLINE void __VCSqlite3OpenIfNeed(VCSqlite3Ref ref) {
+    if (!VCSqlite3IsOpen(ref)) {
+        VCSqlite3Open(ref);
+    }
+}
+
 VC_INLINE sqlite3_stmt *__VCSqlite3PrepartSql(VCSqlite3Ref ref,const char *sql) {
     sqlite3_stmt *stmt;
     if (sqlite3_prepare_v2(ref->db, sql, 0, &stmt, NULL) != SQLITE_OK) {
-        printf("stmt prepare failed on %s errcode %d errmsg %s \n",ref->dbPath,sqlite3_errcode(ref->db),sqlite3_errmsg(ref->db));
+        __VCSqlite3PrintfError(ref,"stmt prepare failed");
         sqlite3_finalize(stmt);
         return NULL;
     }
@@ -159,7 +169,13 @@ VCSqlite3Ref VCSqlite3Create(const char *path) {
     }
     ref->stmtCache = cache;
     __VCSqlite3Open(ref);
+    VCSqlite3OpenWal(ref);
     return ref;
+}
+
+sqlite3 *VCSqlite3GetHandle(VCSqlite3Ref ref) {
+    assert(ref);
+    return ref->db;
 }
 
 bool VCSqlite3IsOpen(VCSqlite3Ref ref) {
@@ -175,7 +191,23 @@ bool VCSqlite3Open(VCSqlite3Ref ref) {
 bool VCSqlite3Close(VCSqlite3Ref ref) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return false;
+    if (VC_UNLIKELY(VCSqlite3IsOpen(ref) == false)) return false;
     VCSqlite3CleanStmtCache(ref);
+    int rc = sqlite3_close(ref->db);
+    if (rc == SQLITE_BUSY || rc == SQLITE_LOCKED) {
+        sqlite3_stmt *stmt;
+        while ((stmt = sqlite3_next_stmt(ref->db, NULL)) != NULL) {
+            printf("Closing leaked statement on %s\n",ref->dbPath);
+            sqlite3_finalize(stmt);
+        }
+        rc = sqlite3_close(ref->db);//retry
+    }
+    
+    if (VC_LIKELY(rc == SQLITE_OK)) {
+        ref->base.info[0] = false;
+    }else {
+        __VCSqlite3PrintfError(ref, "close db error");
+    }
     return false;
 }
 
@@ -186,8 +218,28 @@ VCSqlite3StmtRef VCSqlite3PrepareStmt(VCSqlite3Ref ref,const char *sql) {
     return __VCSqlitePrepareStmt(ref, sql);
 }
 
+void VCSqlite3ExecSql(VCSqlite3Ref ref,const char *sql) {
+    assert(ref);
+    assert(sql);
+    __VCSqlite3OpenIfNeed(ref);
+    sqlite3_exec(ref->db, sql, NULL, NULL, NULL);
+}
 
+void VCSqlite3BeginTransaction(VCSqlite3Ref ref) {
+    VCSqlite3ExecSql(ref, "begin exclusive transaction");
+}
 
+void VCSqlite3Commit(VCSqlite3Ref ref) {
+    VCSqlite3ExecSql(ref, "commit transaction");
+}
+
+void VCSqlite3RollBack(VCSqlite3Ref ref) {
+    VCSqlite3ExecSql(ref, "rollback transaction");
+}
+
+void VCSqlite3OpenWal(VCSqlite3Ref ref) {
+    VCSqlite3ExecSql(ref, "PRAGMA journal_mode=WAL");
+}
 
 void VCSqlite3CleanStmtCache(VCSqlite3Ref ref) {
     assert(ref);

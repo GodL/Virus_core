@@ -31,6 +31,9 @@ VC_OPEN
 VCSqlite3Ref VCSqlite3Create(const char *path);
 
 VC_OPEN
+sqlite3 *VCSqlite3GetHandle(VCSqlite3Ref ref);
+
+VC_OPEN
 bool VCSqlite3IsOpen(VCSqlite3Ref ref);
 
 VC_OPEN
@@ -41,6 +44,21 @@ bool VCSqlite3Close(VCSqlite3Ref ref);
 
 VC_OPEN
 VCSqlite3StmtRef VCSqlite3PrepareStmt(VCSqlite3Ref ref,const char *sql);
+
+VC_OPEN
+void VCSqlite3ExecSql(VCSqlite3Ref ref,const char *sql);
+
+VC_OPEN
+void VCSqlite3BeginTransaction(VCSqlite3Ref ref);
+
+VC_OPEN
+void VCSqlite3Commit(VCSqlite3Ref ref);
+
+VC_OPEN
+void VCSqlite3RollBack(VCSqlite3Ref ref);
+
+VC_OPEN
+void VCSqlite3OpenWal(VCSqlite3Ref ref);
 
 VC_OPEN
 void VCSqlite3CleanStmtCache(VCSqlite3Ref ref);
