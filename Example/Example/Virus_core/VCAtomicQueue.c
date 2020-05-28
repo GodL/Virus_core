@@ -142,6 +142,5 @@ const void *VCAtomicQueueDequeue(VCAtomicQueueRef ref) {
 void VCAtomicQueueClear(VCAtomicQueueRef ref) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return;
-    
     while (VCAtomicQueueDequeue(ref));
 }

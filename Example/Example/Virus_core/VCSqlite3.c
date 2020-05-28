@@ -8,43 +8,127 @@
 
 #include "VCSqlite3.h"
 #include "VCRuntime.h"
-#include <sqlite3.h>
 #include "VCLRUCache.h"
-#include "VCArray.h"
+#include "VCLinkedList.h"
 
 typedef struct __VCSqlite3 {
-    VCRuntimeBase *base;
+    VCRuntimeBase base;
     sqlite3 *db;
     const char *dbPath;
     VCLRUCacheRef stmtCache;
 } VCSqlite3;
 
-static void __VCSqlite3Init(VCSqlite3Ref ref) {
-    assert(ref);
-    assert(ref->dbPath);
-    if (VC_UNLIKELY(!ref->dbPath)) return;
-    if (sqlite3_open(ref->dbPath, &ref->db) != SQLITE_OK) {
-        printf("sqlite open failed on %s errcode %d  errmsg %s\n",ref->dbPath,sqlite3_errcode(ref->db),sqlite3_errmsg(ref->db));
-        sqlite3_close(ref->db);
-        return;
-    }
-    ref->base->info[0] = true;
-}
-
-static VCHashCode __VCSqlite3Hash(VCTypeRef ref) {
-    VCSqlite3Ref sqlite3 = (VCSqlite3Ref)ref;
-    return (VCHashCode)sqlite3->db;
+VC_INLINE VCSqlite3StmtRef VCSqlite3StmtCreate(sqlite3_stmt *stmt) {
+    VCSqlite3StmtRef ref = calloc(1, sizeof(VCSqlite3Stmt));
+    ref->used = false;
+    ref->fromCache = false;
+    ref->stmt = stmt;
+    return ref;
 }
 
 static void __VCSqlite3Dealloc(VCTypeRef ref) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return;
     VCSqlite3Ref sqlite3 = (VCSqlite3Ref)ref;
-    VCSqlite3Close(sqlite3);
     VCRelease(sqlite3->stmtCache);
+    VCSqlite3Close(sqlite3);
     free((void *)sqlite3->dbPath);
     free(sqlite3);
     sqlite3 = NULL;
+}
+
+VC_INLINE const void *__VCSqlite3StmtRetainCallBack(const void *stmt) {
+    if (stmt) {
+        VCSqlite3StmtRef ref = (VCSqlite3StmtRef)stmt;
+        sqlite3_reset(ref->stmt);
+    }
+    return stmt;
+}
+
+VC_INLINE void __VCSqlite3StmtReleaseCallBack(const void *stmt) {
+    if (stmt) {
+        VCSqlite3StmtRef ref = (VCSqlite3StmtRef)stmt;
+        sqlite3_finalize(ref->stmt);
+        free(ref);
+        ref = NULL;
+    }
+}
+
+VC_INLINE VCSqlite3StmtRef __VCSqlite3GetStmtFromCacheItem(VCLinkedListRef list) {
+    assert(list);
+    VCNodeRef node = (VCNodeRef)VCLinkedListGetNodeAtIndex(list, VCLinkedListGetCount(list) - 1);
+    if (node == NULL) return NULL;
+    VCSqlite3StmtRef stmt = (VCSqlite3StmtRef)node->value;
+    if (stmt == NULL || stmt->used) return NULL;
+    stmt->used = true;
+    VCLinkedListNodeToHead(list, node);
+    return stmt;
+}
+
+VC_INLINE bool __VCSqlite3Open(VCSqlite3Ref ref) {
+    if (sqlite3_open(ref->dbPath, &ref->db) != SQLITE_OK) {
+        printf("sqlite open failed on %s errcode %d  errmsg %s\n",ref->dbPath,sqlite3_errcode(ref->db),sqlite3_errmsg(ref->db));
+        sqlite3_close(ref->db);
+        return false;
+    }
+    ref->base.info[0] = true;
+    return true;
+}
+
+VC_INLINE sqlite3_stmt *__VCSqlite3PrepartSql(VCSqlite3Ref ref,const char *sql) {
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(ref->db, sql, 0, &stmt, NULL) != SQLITE_OK) {
+        printf("stmt prepare failed on %s errcode %d errmsg %s \n",ref->dbPath,sqlite3_errcode(ref->db),sqlite3_errmsg(ref->db));
+        sqlite3_finalize(stmt);
+        return NULL;
+    }
+    return stmt;
+}
+
+VC_INLINE VCSqlite3StmtRef __VCSqlite3CreateStmtToCache(VCSqlite3Ref ref,const char *sql) {
+    sqlite3_stmt *stmt = __VCSqlite3PrepartSql(ref, sql);
+    if (VC_UNLIKELY(stmt == NULL)) return NULL;
+    VCSqlite3StmtRef sqlite3Stmt = VCSqlite3StmtCreate(stmt);
+    sqlite3Stmt->fromCache = true;
+    VCLinkedListRef cacheItem = (VCLinkedListRef)VCLRUCacheGetValue(ref->stmtCache, sql);
+    if (VC_UNLIKELY(cacheItem == NULL)) {
+        printf("funcation called error");
+        return NULL;
+    }
+    VCLinkedListAddHead(cacheItem, sqlite3Stmt);
+    sqlite3Stmt->used = true;
+    return sqlite3Stmt;
+}
+
+VC_INLINE VCSqlite3StmtRef __VCSqlite3GetStmtFromCache(VCSqlite3Ref ref,const char *sql) {
+    VCLinkedListRef cacheItem = (VCLinkedListRef)VCLRUCacheGetValue(ref->stmtCache, sql);
+    if (cacheItem == NULL) {
+        VCLinkedListCallback callback = {
+            __VCSqlite3StmtRetainCallBack,
+            __VCSqlite3StmtReleaseCallBack,
+            NULL
+        };
+        cacheItem = VCLinkedListCreate(&callback);
+        if (cacheItem) {
+            VCLRUCacheSetValue(ref->stmtCache, sql, cacheItem, 0);
+        }
+    }
+    return __VCSqlite3GetStmtFromCacheItem(cacheItem);
+}
+
+VC_INLINE VCSqlite3StmtRef __VCSqlitePrepareStmt(VCSqlite3Ref ref,const char *sql) {
+    VCSqlite3StmtRef stmt = __VCSqlite3GetStmtFromCache(ref, sql);
+    if (stmt == NULL) {
+        VCLinkedListRef cacheItem = (VCLinkedListRef)VCLRUCacheGetValue(ref->stmtCache, sql);
+        if (VCLinkedListGetCount(cacheItem) < 20) {
+            stmt = __VCSqlite3CreateStmtToCache(ref, sql);
+        }else {
+            sqlite3_stmt *sqlite3_stmt = __VCSqlite3PrepartSql(ref, sql);
+            if (VC_UNLIKELY(sqlite3_stmt == NULL)) return NULL;
+            stmt = VCSqlite3StmtCreate(sqlite3_stmt);
+        }
+    }
+    return stmt;
 }
 
 static const VCRuntimeClass __VCSqlite3Class = {
@@ -52,7 +136,7 @@ static const VCRuntimeClass __VCSqlite3Class = {
     NULL,
     NULL,
     NULL,
-    __VCSqlite3Hash,
+    NULL,
     __VCSqlite3Dealloc
 };
 
@@ -62,9 +146,51 @@ VCTypeID VCSqlite3GetTypeID(void) {
     return VCRuntimeRegisterClass(__VCSqlite3TypeID, __VCSqlite3Class);
 }
 
+VCSqlite3Ref VCSqlite3Create(const char *path) {
+    assert(path);
+    if (VC_UNLIKELY(path == NULL || strlen(path) == 0)) return NULL;
+    VCSqlite3Ref ref = (VCSqlite3Ref)VCRuntimeCreateInstance(VCSqlite3GetTypeID(), sizeof(VCSqlite3) - sizeof(VCRuntimeBase));
+    if (VC_UNLIKELY(ref == NULL)) return NULL;
+    ref->dbPath = strdup(path);
+    VCLRUCacheRef cache = VCLRUCacheCreate(12, 0, &kVCCopyStringLRUCacheKeyCallback, &kVCTypeLRUCacheValueCallback);
+    if (cache == NULL) {
+        __VCSqlite3Dealloc(ref);
+        return NULL;
+    }
+    ref->stmtCache = cache;
+    __VCSqlite3Open(ref);
+    return ref;
+}
+
+bool VCSqlite3IsOpen(VCSqlite3Ref ref) {
+    assert(ref);
+    return ref->base.info[0];
+}
+
+bool VCSqlite3Open(VCSqlite3Ref ref) {
+    assert(ref);
+    return __VCSqlite3Open(ref);
+}
+
 bool VCSqlite3Close(VCSqlite3Ref ref) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return false;
-    
+    VCSqlite3CleanStmtCache(ref);
     return false;
+}
+
+VCSqlite3StmtRef VCSqlite3PrepareStmt(VCSqlite3Ref ref,const char *sql) {
+    assert(ref);
+    assert(sql);
+    assert(strlen(sql) > 0);
+    return __VCSqlitePrepareStmt(ref, sql);
+}
+
+
+
+
+void VCSqlite3CleanStmtCache(VCSqlite3Ref ref) {
+    assert(ref);
+    if (VC_UNLIKELY(ref == NULL)) return;
+    VCLRUCacheClear(ref->stmtCache);
 }

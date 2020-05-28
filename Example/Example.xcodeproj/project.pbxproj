@@ -22,7 +22,6 @@
 		464FC1A524693F9A0005D833 /* VCAtomicQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 464FC1A424693F9A0005D833 /* VCAtomicQueue.c */; };
 		464FC1A824693FC50005D833 /* VCBlockingQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 464FC1A724693FC50005D833 /* VCBlockingQueue.c */; };
 		4650D3A024728B5900D47878 /* VCSqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 4650D39F24728B5900D47878 /* VCSqlite3.c */; };
-		4650D3A324728EC100D47878 /* VCSqliteStmt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4650D3A224728EC100D47878 /* VCSqliteStmt.c */; };
 		46BE89732473D21100264A35 /* VCLRUCache.c in Sources */ = {isa = PBXBuildFile; fileRef = 46BE89722473D21100264A35 /* VCLRUCache.c */; };
 /* End PBXBuildFile section */
 
@@ -74,8 +73,6 @@
 		464FC1A724693FC50005D833 /* VCBlockingQueue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCBlockingQueue.c; sourceTree = "<group>"; };
 		4650D39E24728B5900D47878 /* VCSqlite3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCSqlite3.h; sourceTree = "<group>"; };
 		4650D39F24728B5900D47878 /* VCSqlite3.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCSqlite3.c; sourceTree = "<group>"; };
-		4650D3A124728EC100D47878 /* VCSqliteStmt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCSqliteStmt.h; sourceTree = "<group>"; };
-		4650D3A224728EC100D47878 /* VCSqliteStmt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCSqliteStmt.c; sourceTree = "<group>"; };
 		46BE89712473D21100264A35 /* VCLRUCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VCLRUCache.h; sourceTree = "<group>"; };
 		46BE89722473D21100264A35 /* VCLRUCache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = VCLRUCache.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -179,8 +176,6 @@
 				464FC1A724693FC50005D833 /* VCBlockingQueue.c */,
 				4650D39E24728B5900D47878 /* VCSqlite3.h */,
 				4650D39F24728B5900D47878 /* VCSqlite3.c */,
-				4650D3A124728EC100D47878 /* VCSqliteStmt.h */,
-				4650D3A224728EC100D47878 /* VCSqliteStmt.c */,
 			);
 			path = Virus_core;
 			sourceTree = "<group>";
@@ -325,7 +320,6 @@
 				464F79E224652FC600007DDE /* main.m in Sources */,
 				464FC1A824693FC50005D833 /* VCBlockingQueue.c in Sources */,
 				464FC19F24693F290005D833 /* VCDictionary.c in Sources */,
-				4650D3A324728EC100D47878 /* VCSqliteStmt.c in Sources */,
 				464F7A072465301200007DDE /* VCBase.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

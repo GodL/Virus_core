@@ -150,6 +150,6 @@ const void *VCBlockingQueueDequeue(VCBlockingQueueRef ref) {
 void VCBlockingQueueClear(VCBlockingQueueRef ref) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return;
-    while (VCAtomicQueueDequeue(ref->waitQueue));
-    while (VCAtomicQueueDequeue(ref->queue));
+    VCAtomicQueueClear(ref->waitQueue);
+    VCAtomicQueueClear(ref->queue);
 }

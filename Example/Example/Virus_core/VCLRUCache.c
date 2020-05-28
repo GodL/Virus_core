@@ -146,8 +146,10 @@ VCLRUCacheRef VCLRUCacheCreate(VCIndex countLimit,VCIndex costLimit, const VCLRU
         return NULL;
     }
     ref->hash = hash;
+    if (costLimit == 0) costLimit = VC_INT_MAX;
     ref->costLimit = costLimit;
     ref->totalCost = 0;
+    if (countLimit == 0) countLimit = VC_INT_MAX;
     ref->countLimit = countLimit;
     ref->totalCount = 0;
     return ref;
