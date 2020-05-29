@@ -60,11 +60,23 @@ VC_INLINE const VCAtomicQueueCallback *__VCAtomicQeueuGetCallback(VCAtomicQueueR
     return (const VCAtomicQueueCallback *)ref->base->callback;
 }
 
-VC_INLINE void __VCAtomicQueueReleaseNode(VCAtomicQueueRef ref,VCAtomicQueueNodeRef node) {
-    const VCAtomicQueueCallback *cb = __VCAtomicQeueuGetCallback(ref);
-    if (cb && cb->release) cb->release(node->value);
+VC_INLINE void __VCAtomicQueueReleaseNode(VCAtomicQueueRef ref,VCAtomicQueueNodeRef node,bool callRelease) {
+    if (callRelease) {
+        const VCAtomicQueueCallback *cb = __VCAtomicQeueuGetCallback(ref);
+        if (cb && cb->release) cb->release(node->value);
+    }
     free(node);
     node = NULL;
+}
+
+static VCAtomicQueueNodeRef __VCAtomicQueueDequeue(VCAtomicQueueRef ref) {
+    VCAtomicQueueNodeRef result;
+    do {
+        result = ref->head->next;
+        if (result == NULL) return NULL;
+    } while (VC_CAS(&ref->head->next, result, result->next));
+    VC_ATOMIC_SUB(&ref->count, 1);
+    return result;
 }
 
 const VCAtomicQueueCallback kVCTypeAtomicQueueCallback = {
@@ -126,21 +138,23 @@ void VCAtomicQueueEnqueue(VCAtomicQueueRef ref,const void *value) {
 }
 
 const void *VCAtomicQueueDequeue(VCAtomicQueueRef ref) {
+    return VCAtomicQueueDequeueCallRelease(ref, false);
+}
+
+const void *VCAtomicQueueDequeueCallRelease(VCAtomicQueueRef ref,bool callRelease) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return NULL;
-    VCAtomicQueueNodeRef result;
-    do {
-        result = ref->head->next;
-        if (result == NULL) return NULL;
-    } while (VC_CAS(&ref->head->next, result, result->next));
-    const void *val = result->value;
-    __VCAtomicQueueReleaseNode(ref, result);
-    VC_ATOMIC_SUB(&ref->count, 1);
+    VCAtomicQueueNodeRef node = __VCAtomicQueueDequeue(ref);
+    if (node == NULL) {
+        return NULL;
+    }
+    const void *val = node->value;
+    __VCAtomicQueueReleaseNode(ref, node, callRelease);
     return val;
 }
 
 void VCAtomicQueueClear(VCAtomicQueueRef ref) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return;
-    while (VCAtomicQueueDequeue(ref));
+    while (VCAtomicQueueDequeueCallRelease(ref, true));
 }

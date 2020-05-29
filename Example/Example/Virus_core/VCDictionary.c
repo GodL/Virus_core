@@ -80,7 +80,7 @@ VC_INLINE VCIndex __VCDictionaryGetNextBucketSize(VCIndex size) {
     return __VCDictionaryBucketSizes[i - 1];
 }
 
-static VCTypeID *__VCDictionaryTypeID = NULL;
+static volatile VCTypeID __VCDictionaryTypeID = 0;
 
 VCTypeID VCDictionaryGetTypeID(void) {
     return VCRuntimeRegisterClass(__VCDictionaryTypeID, __VCDictionaryClass);

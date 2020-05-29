@@ -121,6 +121,7 @@ VC_INLINE VCSqlite3StmtRef __VCSqlite3GetStmtFromCache(VCSqlite3Ref ref,const ch
         cacheItem = VCLinkedListCreate(&callback);
         if (cacheItem) {
             VCLRUCacheSetValue(ref->stmtCache, sql, cacheItem, 0);
+            VCRelease(cacheItem);
         }
     }
     return __VCSqlite3GetStmtFromCacheItem(cacheItem);
@@ -168,8 +169,6 @@ VCSqlite3Ref VCSqlite3Create(const char *path) {
         return NULL;
     }
     ref->stmtCache = cache;
-    __VCSqlite3Open(ref);
-    VCSqlite3OpenWal(ref);
     return ref;
 }
 
@@ -190,6 +189,7 @@ bool VCSqlite3Open(VCSqlite3Ref ref) {
 
 bool VCSqlite3Close(VCSqlite3Ref ref) {
     assert(ref);
+    if (!VCSqlite3IsOpen(ref)) return true;
     if (VC_UNLIKELY(ref == NULL)) return false;
     if (VC_UNLIKELY(VCSqlite3IsOpen(ref) == false)) return false;
     VCSqlite3CleanStmtCache(ref);
@@ -239,6 +239,13 @@ void VCSqlite3RollBack(VCSqlite3Ref ref) {
 
 void VCSqlite3OpenWal(VCSqlite3Ref ref) {
     VCSqlite3ExecSql(ref, "PRAGMA journal_mode=WAL");
+}
+
+void VCSqlite3StmtReleaseIfNeed(VCSqlite3StmtRef ref) {
+    assert(ref);
+    if (VC_UNLIKELY(ref == NULL)) return;
+    if (ref->fromCache) return;
+    __VCSqlite3StmtReleaseCallBack(ref);
 }
 
 void VCSqlite3CleanStmtCache(VCSqlite3Ref ref) {

@@ -45,6 +45,9 @@ VC_OPEN
 const void *VCBlockingQueueDequeue(VCBlockingQueueRef ref);
 
 VC_OPEN
+const void *VCBlockingQueueDequeueCallRelease(VCBlockingQueueRef ref,bool callRelease);
+
+VC_OPEN
 void VCBlockingQueueClear(VCBlockingQueueRef ref);
 
 VC_EXTERN_C_END

@@ -46,6 +46,9 @@ VC_OPEN
 const void *VCAtomicQueueDequeue(VCAtomicQueueRef ref);
 
 VC_OPEN
+const void *VCAtomicQueueDequeueCallRelease(VCAtomicQueueRef ref,bool callRelease);
+
+VC_OPEN
 void VCAtomicQueueClear(VCAtomicQueueRef ref);
 
 VC_EXTERN_C_END

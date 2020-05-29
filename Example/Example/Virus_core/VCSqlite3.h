@@ -61,6 +61,9 @@ VC_OPEN
 void VCSqlite3OpenWal(VCSqlite3Ref ref);
 
 VC_OPEN
+void VCSqlite3StmtReleaseIfNeed(VCSqlite3StmtRef ref);
+
+VC_OPEN
 void VCSqlite3CleanStmtCache(VCSqlite3Ref ref);
 
 VC_EXTERN_C_END

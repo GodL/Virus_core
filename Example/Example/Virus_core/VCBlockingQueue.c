@@ -130,10 +130,14 @@ void VCBlockingQueueEnqueue(VCBlockingQueueRef ref,const void *value) {
     assert(value);
     if (VC_UNLIKELY(ref == NULL || value == NULL)) return;
     VCAtomicQueueEnqueue(ref->queue, value);
-    VCAtomicQueueDequeue(ref->waitQueue);
+    VCAtomicQueueDequeueCallRelease(ref->waitQueue,true);
 }
 
 const void *VCBlockingQueueDequeue(VCBlockingQueueRef ref) {
+    return VCBlockingQueueDequeueCallRelease(ref, false);
+}
+
+const void *VCBlockingQueueDequeueCallRelease(VCBlockingQueueRef ref,bool callRelease) {
     assert(ref);
     if (VC_UNLIKELY(ref == NULL)) return NULL;
     const void *value = VCAtomicQueueDequeue(ref->queue);
@@ -141,7 +145,7 @@ const void *VCBlockingQueueDequeue(VCBlockingQueueRef ref) {
         VCAtomicQueueEnqueue(ref->waitQueue, __VCWaitNodeCreate(ref->lock, ref->cond));
         pthread_mutex_lock(&ref->lock);
         pthread_cond_wait(&ref->cond, &ref->lock);
-        value = VCAtomicQueueDequeue(ref->queue);
+        value = VCAtomicQueueDequeueCallRelease(ref->queue, callRelease);
         pthread_mutex_unlock(&ref->lock);
     }
     return value;

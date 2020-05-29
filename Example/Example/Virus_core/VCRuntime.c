@@ -84,3 +84,8 @@ VCHashCode VCHash(VCTypeRef vc) {
     if (class.hash) return class.hash(vc);
     return (VCIndex)vc;
 }
+
+const char *VCObjectGetClassName(VCTypeRef ref) {
+    VCRuntimeClass class = VCRuntimeGetClass(VCGetTypeID(ref));
+    return class.className;
+}

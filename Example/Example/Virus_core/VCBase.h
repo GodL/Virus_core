@@ -101,21 +101,31 @@ VC_INLINE VCRange VCRangeMake(VCIndex location,VCIndex length) {
     return range;
 }
 
-VC_OPEN const VCRange VCRangeZero;
+VC_OPEN
+const VCRange VCRangeZero;
 
 typedef const void * VCTypeRef;
 
-VC_OPEN VCTypeID VCGetTypeID(VCTypeRef vc);
+VC_OPEN
+VCTypeID VCGetTypeID(VCTypeRef vc);
 
-VC_OPEN VCTypeRef VCRetain(VCTypeRef vc);
+VC_OPEN
+VCTypeRef VCRetain(VCTypeRef vc);
 
-VC_OPEN void VCRelease(VCTypeRef vc);
+VC_OPEN
+void VCRelease(VCTypeRef vc);
 
-VC_OPEN VCIndex VCGetRetainCount(VCTypeRef vc);
+VC_OPEN
+VCIndex VCGetRetainCount(VCTypeRef vc);
 
-VC_OPEN bool VCEqual(VCTypeRef vc1,VCTypeRef vc2);
+VC_OPEN
+bool VCEqual(VCTypeRef vc1,VCTypeRef vc2);
 
-VC_OPEN VCHashCode VCHash(VCTypeRef vc);
+VC_OPEN
+VCHashCode VCHash(VCTypeRef vc);
+
+VC_OPEN
+const char *VCObjectGetClassName(VCTypeRef ref);
 
 VC_EXTERN_C_END
 
